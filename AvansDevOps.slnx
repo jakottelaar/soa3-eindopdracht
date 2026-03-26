@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="AvansDevOps.Domain/AvansDevOps.Domain.csproj" />
+  <Project Path="AvansDevOps.Infrastructure/AvansDevOps.Infrastructure.csproj" />
+  <Project Path="AvansDevOps.Tests/AvansDevOps.Tests.csproj" />
+</Solution>

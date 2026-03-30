@@ -1,4 +1,5 @@
 using AvansDevOps.Domain.Models.Users;
+using AvansDevOps.Domain.Models.BacklogItems;
 
 namespace AvansDevOps.Domain.Models;
 

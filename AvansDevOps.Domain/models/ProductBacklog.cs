@@ -1,3 +1,5 @@
+using AvansDevOps.Domain.Models.BacklogItems;
+
 namespace AvansDevOps.Domain.Models;
 
 public class ProductBacklog

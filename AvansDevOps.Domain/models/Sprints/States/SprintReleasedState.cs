@@ -1,4 +1,4 @@
-namespace  AvansDevOps.Domain.Models.Sprint.States;
+namespace  AvansDevOps.Domain.Models.Sprints.States;
 
 public class SprintReleasedState : ISprintState
 {

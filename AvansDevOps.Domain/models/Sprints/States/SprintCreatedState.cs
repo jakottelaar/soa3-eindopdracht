@@ -1,6 +1,6 @@
-namespace AvansDevOps.Domain.Models.Sprint.States;
+namespace AvansDevOps.Domain.Models.Sprints.States;
 
-public class SprintActiveState : ISprintState
+public class SprintCreatedState : ISprintState
 {
     public void Next(Sprint context)
     {

@@ -1,4 +1,4 @@
-namespace AvansDevOps.Domain.Models.Sprint.States;
+namespace AvansDevOps.Domain.Models.Sprints.States;
 
 public class SprintCancelledState : ISprintState
 {
@@ -9,6 +9,6 @@ public class SprintCancelledState : ISprintState
 
     public void Previous(Sprint context)
     {
-        context.State = new SPrintReleasedState();
+        context.State = new SprintReleasedState();
     }
 }

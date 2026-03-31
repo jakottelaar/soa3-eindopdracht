@@ -1,4 +1,4 @@
-namespace AvansDevOps.Domain.Models.Sprint;
+namespace AvansDevOps.Domain.Models.Sprints;
 
 public interface ISprintState
 {

@@ -5,6 +5,7 @@ public class BacklogItemDoingState : IBacklogItemState
     public void Next(BacklogItem context)
     {
         context.State = new BacklogItemReadyForTestingState();
+        context.NotifyObservers($"BacklogItem '{context.Title}' is now ready for testing.");
     }
 
     public void Previous(BacklogItem context)

@@ -2,13 +2,33 @@ namespace AvansDevOps.Domain.Models.Sprints.States;
 
 public class SprintCancelledState : ISprintState
 {
-    public void Next(Sprint context)
+    public void Start(Sprint sprint)
     {
-        throw new InvalidOperationException("Activity is already in the last state.");
+        throw new NotImplementedException();
     }
 
-    public void Previous(Sprint context)
+    public void Finish(Sprint sprint)
     {
-        context.State = new SprintReleasedState();
+        throw new NotImplementedException();
+    }
+
+    public void StartRelease(Sprint sprint)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void ReleaseSucceeded(Sprint sprint)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void ReleaseFailed(Sprint sprint)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Cancel(Sprint sprint)
+    {
+        throw new NotImplementedException();
     }
 }

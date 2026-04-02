@@ -1,11 +1,12 @@
 using AvansDevOps.Domain.Models.Sprints;
 using AvansDevOps.Domain.Models.Sprints.States;
+using AvansDevOps.Domain.Models.Users;
 
 namespace AvansDevOps.Tests;
 
 public class SprintStateTests
 {
-    private Sprint CreateSprint() => new Sprint(new ReleaseSprint()) { Name = "Test Sprint" };
+    private Sprint CreateSprint() => new Sprint(new ReleaseSprintStrategy(), new ScrumMaster("John Doe", "john.doe@example.com")) { Name = "Test Sprint" };
 
     [Fact]
     public void Sprint_StartsInCreatedState()
@@ -18,7 +19,7 @@ public class SprintStateTests
     public void Sprint_Next_FromCreated_GoesToActive()
     {
         var sprint = CreateSprint();
-        sprint.NextState();
+        sprint.SetState(new SprintActiveState());
         Assert.IsType<SprintActiveState>(sprint.State);
     }
 
@@ -27,7 +28,7 @@ public class SprintStateTests
     {
         var sprint = CreateSprint();
         sprint.State = new SprintActiveState();
-        sprint.NextState();
+        sprint.SetState(new SprintFinishedState());
         Assert.IsType<SprintFinishedState>(sprint.State);
     }
 }

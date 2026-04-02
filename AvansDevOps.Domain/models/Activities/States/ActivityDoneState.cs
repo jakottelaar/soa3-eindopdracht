@@ -2,13 +2,13 @@ namespace AvansDevOps.Domain.Models.Activities.States;
 
 public class ActivityDoneState : IActivityState
 {
-    public void Next(Activity context)
+    public void Start(Activity activity)
     {
-        throw new InvalidOperationException("Activity is already in the last state.");
+        throw new InvalidOperationException();
     }
 
-    public void Previous(Activity context)
+    public void Complete(Activity activity)
     {
-        context.State = new ActivityDoingState();
+        throw new InvalidOperationException();
     }
 }

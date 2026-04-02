@@ -15,13 +15,31 @@ public class BacklogItem : IObservable
     public IBacklogItemState State { get; set; } = new BacklogItemTodoState();
     private readonly List<IObserver> observers = [];
 
-    public void NextState() =>
-        State.Next(this);
+    public void Start() => 
+        State.Start(this);
 
-    public void PreviousState() =>
-        State.Previous(this);
+    public void MarkReadyForTesting() => 
+        State.MarkReadyForTesting(this);
 
+    public void StartTesting() => 
+        State.StartTesting(this);
 
+    public void Approve() => 
+        State.Approve(this);
+
+    public void Reject() => 
+        State.Reject(this);
+        
+    public void SetState(IBacklogItemState state)
+    {
+        State = state;
+    }
+
+    public IBacklogItemState GetState()
+    {
+        return State;
+    }
+    
     public void NotifyObservers(string message)
     {
         foreach (var observer in observers)        

@@ -2,13 +2,28 @@ namespace AvansDevOps.Domain.Models.BacklogItems.States;
 
 public class BacklogItemReadyForTestingState : IBacklogItemState
 {
-    public void Next(BacklogItem context)
+    public void Start(BacklogItem item)
     {
-        context.State = new BacklogItemTestingState();
+        throw new InvalidOperationException();
     }
 
-    public void Previous(BacklogItem context)
+    public void MarkReadyForTesting(BacklogItem item)
     {
-        context.State = new BacklogItemDoingState();
+        throw new InvalidOperationException();
+    }
+
+     public void StartTesting(BacklogItem item)
+    {
+        item.SetState(new BacklogItemTestingState());
+    }
+
+    public void Approve(BacklogItem item)
+    {
+        throw new InvalidOperationException();
+    }
+
+    public void Reject(BacklogItem item)
+    {
+        throw new InvalidOperationException();
     }
 }

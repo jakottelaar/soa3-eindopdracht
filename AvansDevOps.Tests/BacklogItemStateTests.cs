@@ -8,7 +8,7 @@ namespace AvansDevOps.Tests;
 public class BacklogItemStateTests
 {
     private BacklogItem CreateBacklogItem() => new BacklogItem { Title = "Test Item" };
-    
+
     [Fact]
     public void BacklogItem_StartsInTodoState()
     {
@@ -17,42 +17,48 @@ public class BacklogItemStateTests
     }
 
     [Fact]
-    public void BacklogItem_Next_FromTodo_GoesToDoing()
+    public void BacklogItem_FromTodo_Start_GoesToDoing()
     {
         var item = CreateBacklogItem();
-        item.NextState();
+        item.Start();
         Assert.IsType<BacklogItemDoingState>(item.State);
     }
 
     [Fact]
-    public void BacklogItem_Next_FromDoing_GoesToReadyForTesting()
+    public void BacklogItem_FromDoing_MarkReadyForTesting_GoesToReadyForTesting()
     {
         var item = CreateBacklogItem();
         item.State = new BacklogItemDoingState();
-        item.NextState();
+
+        item.MarkReadyForTesting();
+
         Assert.IsType<BacklogItemReadyForTestingState>(item.State);
     }
 
     [Fact]
-    public void BacklogItem_Next_FromReadyForTesting_GoesToTesting()
+    public void BacklogItem_FromReadyForTesting_StartTesting_GoesToTesting()
     {
         var item = CreateBacklogItem();
         item.State = new BacklogItemReadyForTestingState();
-        item.NextState();
+
+        item.StartTesting();
+
         Assert.IsType<BacklogItemTestingState>(item.State);
     }
 
     [Fact]
-    public void BacklogItem_Next_FromTesting_GoesToTested()
+    public void BacklogItem_FromTesting_Approve_GoesToTested()
     {
         var item = CreateBacklogItem();
         item.State = new BacklogItemTestingState();
-        item.NextState();
+
+        item.Approve();
+
         Assert.IsType<BacklogItemTestedState>(item.State);
     }
 
     [Fact]
-    public void BacklogItem_Next_FromTested_WithAllActivitiesDone_GoesToDone()
+    public void BacklogItem_FromTested_WithAllActivitiesDone_Approve_GoesToDone()
     {
         var item = CreateBacklogItem();
         item.Activities = new List<Activity>
@@ -61,13 +67,14 @@ public class BacklogItemStateTests
             new Activity { Title = "Act 2", State = new ActivityDoneState() }
         };
         item.State = new BacklogItemTestedState();
-        item.NextState();
+
+        item.Approve();
+
         Assert.IsType<BacklogItemDoneState>(item.State);
     }
 
-    // FR-05: niet done als activiteiten nog open zijn
     [Fact]
-    public void BacklogItem_Next_FromTested_WithUnfinishedActivities_ThrowsException()
+    public void BacklogItem_FromTested_WithUnfinishedActivities_Approve_ThrowsException()
     {
         var item = CreateBacklogItem();
         item.Activities = new List<Activity>
@@ -76,59 +83,66 @@ public class BacklogItemStateTests
             new Activity { Title = "Act 2", State = new ActivityDoingState() }
         };
         item.State = new BacklogItemTestedState();
-        Assert.Throws<InvalidOperationException>(() => item.NextState());
+
+        Assert.Throws<InvalidOperationException>(() => item.Approve());
     }
 
-    // FR-05: geen activiteiten = mag wel done worden
     [Fact]
-    public void BacklogItem_Next_FromTested_WithNoActivities_GoesToDone()
+    public void BacklogItem_FromTested_WithNoActivities_Approve_GoesToDone()
     {
         var item = CreateBacklogItem();
         item.State = new BacklogItemTestedState();
-        item.NextState();
+
+        item.Approve();
+
         Assert.IsType<BacklogItemDoneState>(item.State);
     }
 
-    // FR-12: tester vindt bug → terug naar todo
     [Fact]
-    public void BacklogItem_Previous_FromTesting_GoesToTodo()
+    public void BacklogItem_FromTesting_Reject_GoesToTodo()
     {
         var item = CreateBacklogItem();
         item.State = new BacklogItemTestingState();
-        item.PreviousState();
+
+        item.Reject();
+
         Assert.IsType<BacklogItemTodoState>(item.State);
     }
 
-    // FR-13: lead developer keurt af → terug naar ReadyForTesting
     [Fact]
-    public void BacklogItem_Previous_FromTested_GoesToReadyForTesting()
+    public void BacklogItem_FromTested_Reject_GoesToReadyForTesting()
     {
         var item = CreateBacklogItem();
         item.State = new BacklogItemTestedState();
-        item.PreviousState();
+
+        item.Reject();
+
         Assert.IsType<BacklogItemReadyForTestingState>(item.State);
     }
 
     [Fact]
-    public void BacklogItem_Previous_FromTodo_ThrowsException()
+    public void BacklogItem_FromTodo_Reject_ThrowsException()
     {
         var item = CreateBacklogItem();
-        Assert.Throws<InvalidOperationException>(() => item.PreviousState());
+
+        Assert.Throws<InvalidOperationException>(() => item.Reject());
     }
 
     [Fact]
-    public void BacklogItem_Next_FromDone_ThrowsException()
+    public void BacklogItem_FromDone_Approve_ThrowsException()
     {
         var item = CreateBacklogItem();
         item.State = new BacklogItemDoneState();
-        Assert.Throws<InvalidOperationException>(() => item.NextState());
+
+        Assert.Throws<InvalidOperationException>(() => item.Approve());
     }
 
     [Fact]
-    public void BacklogItem_Previous_FromDone_ThrowsException()
+    public void BacklogItem_FromDone_Reject_ThrowsException()
     {
         var item = CreateBacklogItem();
         item.State = new BacklogItemDoneState();
-        Assert.Throws<InvalidOperationException>(() => item.PreviousState());
+
+        Assert.Throws<InvalidOperationException>(() => item.Reject());
     }
 }

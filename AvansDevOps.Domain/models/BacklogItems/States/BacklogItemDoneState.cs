@@ -2,13 +2,28 @@ namespace AvansDevOps.Domain.Models.BacklogItems.States;
 
 public class BacklogItemDoneState : IBacklogItemState
 {
-    public void Next(BacklogItem context)
+    public void Start(BacklogItem item)
     {
-        throw new InvalidOperationException("BacklogItem is already done.");
+        throw new InvalidOperationException();
     }
 
-    public void Previous(BacklogItem context)
+    public void MarkReadyForTesting(BacklogItem item)
     {
-        throw new InvalidOperationException("Cannot reopen a done BacklogItem.");
+        throw new InvalidOperationException();
+    }
+
+    public void StartTesting(BacklogItem item)
+    {
+        throw new InvalidOperationException();
+    }
+
+    public void Approve(BacklogItem item)
+    {
+        throw new InvalidOperationException();
+    }
+
+    public void Reject(BacklogItem item)
+    {
+        throw new InvalidOperationException();
     }
 }

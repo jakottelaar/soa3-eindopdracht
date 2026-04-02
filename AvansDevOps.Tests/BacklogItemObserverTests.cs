@@ -14,7 +14,7 @@ public class BacklogItemObserverTests
         var observer = new NotificationObserver(mockAdapter, "TestObserver");
         var backlogItem = new BacklogItem { Title = "Test Backlog Item", State = new BacklogItemDoingState() };
         backlogItem.Subscribe(observer);
-        backlogItem.NextState();
+        backlogItem.MarkReadyForTesting();
         mockAdapter.Received(1).SendNotification("BacklogItem 'Test Backlog Item' is now ready for testing.", "TestObserver");
     }
 }

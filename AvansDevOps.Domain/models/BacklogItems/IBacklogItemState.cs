@@ -2,6 +2,9 @@ namespace AvansDevOps.Domain.Models.BacklogItems;
 
 public interface IBacklogItemState
 {
-    void Next(BacklogItem context);
-    void Previous(BacklogItem context);
+    void Start(BacklogItem item);
+    void MarkReadyForTesting(BacklogItem item);
+    void StartTesting(BacklogItem item);
+    void Approve(BacklogItem item);
+    void Reject(BacklogItem item);
 }

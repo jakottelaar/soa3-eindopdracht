@@ -2,13 +2,30 @@ namespace AvansDevOps.Domain.Models.BacklogItems.States;
 
 public class BacklogItemTodoState : IBacklogItemState
 {
-    public void Next(BacklogItem context)
+    
+    public void Start(BacklogItem item)
     {
-        context.State = new BacklogItemDoingState();
+        item.SetState(new BacklogItemDoingState());
     }
 
-    public void Previous(BacklogItem context)
+    public void MarkReadyForTesting(BacklogItem item)
     {
-        throw new InvalidOperationException("BacklogItem is already in the first state.");
+        throw new InvalidOperationException();
     }
+
+    public void StartTesting(BacklogItem item)
+    {
+        throw new InvalidOperationException();
+    }
+
+    public void Approve(BacklogItem item)
+    {
+        throw new InvalidOperationException();
+    }
+
+    public void Reject(BacklogItem item)
+    {
+        throw new InvalidOperationException();
+    }
+
 }

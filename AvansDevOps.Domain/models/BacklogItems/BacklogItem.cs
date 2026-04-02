@@ -1,5 +1,6 @@
 using AvansDevOps.Domain.Models.Users;
 using AvansDevOps.Domain.Models.Activities;
+using AvansDevOps.Domain.Models.Activities.States;
 using AvansDevOps.Domain.Models.BacklogItems.States;
 using AvansDevOps.Domain.Models.Notifications;
 
@@ -59,5 +60,59 @@ public class BacklogItem : IObservable
     public void Unsubscribe(IObserver observer)
     {
         observers.Remove(observer);
+    }
+
+    public string GetCurrentStateName()
+    {
+        return State.GetType().Name.Replace("BacklogItem", "").Replace("State", "");
+    }
+
+    public void DisplayStatus()
+    {
+        string assignee = AssignedUser?.Name ?? "Unassigned";
+        string points = StoryPoints.HasValue ? StoryPoints.ToString() : "N/A";
+        Console.WriteLine($"    [{GetCurrentStateName()}] {Title} | Assigned: {assignee} | Points: {points}");
+        
+        // Display activities if any exist
+        if (Activities != null && Activities.Count > 0)
+        {
+            Console.WriteLine($"      Activities ({Activities.Count}):");
+            foreach (var activity in Activities)
+            {
+                activity.DisplayStatus();
+            }
+        }
+    }
+
+    public void AddActivity(Activity activity)
+    {
+        Activities ??= new List<Activity>();
+        Activities.Add(activity);
+        Console.WriteLine($"  ✓ Added activity '{activity.Title}' to backlog item '{Title}'");
+    }
+
+    public void RemoveActivity(Activity activity)
+    {
+        if (Activities != null && Activities.Remove(activity))
+        {
+            Console.WriteLine($"  ✓ Removed activity '{activity.Title}' from backlog item '{Title}'");
+        }
+        else
+        {
+            Console.WriteLine($"  ✗ Activity '{activity.Title}' not found in backlog item '{Title}'");
+        }
+    }
+
+    public List<Activity> GetActivities()
+    {
+        return Activities ?? new List<Activity>();
+    }
+
+    public bool AreAllActivitiesDone()
+    {
+        if (Activities == null || Activities.Count == 0)
+            return true; // No activities means all are "done"
+
+        return Activities.All(a => a.GetState() is ActivityDoneState);
     }
 }

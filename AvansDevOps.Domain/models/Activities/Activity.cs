@@ -18,4 +18,21 @@ public class Activity
     {
         return State;
     }
+
+    public void Start() =>
+        State.Start(this);
+
+    public void Complete() =>
+        State.Complete(this);
+
+    public string GetCurrentStateName()
+    {
+        return State.GetType().Name.Replace("Activity", "").Replace("State", "");
+    }
+
+    public void DisplayStatus()
+    {
+        string assignee = AssignedUser?.Name ?? "Unassigned";
+        Console.WriteLine($"      [{GetCurrentStateName()}] {Title} | Assigned: {assignee}");
+    }
 }

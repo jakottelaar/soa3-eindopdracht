@@ -30,4 +30,14 @@ public class Sprint
     {
         return State;
     }
+
+    public string GetCurrentStateName()
+    {
+        return State.GetType().Name;
+    }
+
+    public void DisplayStatus()
+    {
+        Console.WriteLine($"[Sprint: {Name} | State: {GetCurrentStateName()} | Start: {StartDate:yyyy-MM-dd} | End: {EndDate:yyyy-MM-dd}]");
+    }
 }

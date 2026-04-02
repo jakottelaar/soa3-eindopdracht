@@ -4,19 +4,36 @@ namespace AvansDevOps.Domain.Models.BacklogItems.States;
 
 public class BacklogItemTestedState : IBacklogItemState
 {
-    public void Next(BacklogItem context)
-    {
-        if (context.Activities != null && context.Activities.Any(a => a.State is not ActivityDoneState))
-        {
-            throw new InvalidOperationException(
-                "Cannot mark BacklogItem as done: not all activities are done.");
-        }
 
-        context.State = new BacklogItemDoneState();
+    public void Start(BacklogItem item)
+    {
+        throw new InvalidOperationException();
     }
 
-    public void Previous(BacklogItem context)
+    public void MarkReadyForTesting(BacklogItem item)
     {
-        context.State = new BacklogItemReadyForTestingState();
+        throw new InvalidOperationException();
+    }
+
+    public void StartTesting(BacklogItem item)
+    {
+        throw new InvalidOperationException();
+    }
+
+     public void Approve(BacklogItem item)
+    {
+        if (item.Activities == null || item.Activities.All(a => a.GetState() is ActivityDoneState))
+        {
+            item.SetState(new BacklogItemDoneState());
+        }
+        else
+        {
+            throw new InvalidOperationException("Activities not finished");
+        }
+    }
+
+    public void Reject(BacklogItem item)
+    {
+        item.SetState(new BacklogItemReadyForTestingState());
     }
 }

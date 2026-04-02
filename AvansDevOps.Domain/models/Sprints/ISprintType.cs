@@ -1,6 +1,6 @@
 namespace AvansDevOps.Domain.Models.Sprints;
 
-public interface ISprintType
+public interface ISprintStrategy
 {
-    void HandleFinish(Sprint sprint);
+    void Execute(Sprint sprint);
 }

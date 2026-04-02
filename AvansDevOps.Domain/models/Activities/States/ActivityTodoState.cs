@@ -2,13 +2,13 @@ namespace AvansDevOps.Domain.Models.Activities.States;
 
 public class ActivityTodoState : IActivityState
 {
-    public void Next(Activity context)
+    public void Start(Activity activity)
     {
-        context.State = new ActivityDoingState();
+        activity.SetState(new ActivityDoingState());
     }
 
-    public void Previous(Activity context)
+    public void Complete(Activity activity)
     {
-        throw new InvalidOperationException("Activity is already in the first state.");
+        throw new InvalidOperationException();
     }
 }

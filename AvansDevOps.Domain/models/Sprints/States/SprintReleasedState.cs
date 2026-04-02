@@ -2,13 +2,33 @@ namespace  AvansDevOps.Domain.Models.Sprints.States;
 
 public class SprintReleasedState : ISprintState
 {
-    public void Next(Sprint context)
+    public void Start(Sprint sprint)
     {
-        context.State = new SprintCancelledState();
+        throw new NotImplementedException();
     }
 
-    public void Previous(Sprint context)
+    public void Finish(Sprint sprint)
     {
-        context.State = new SprintFinishedState();
+        throw new NotImplementedException();
+    }
+
+    public void StartRelease(Sprint sprint)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void ReleaseSucceeded(Sprint sprint)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void ReleaseFailed(Sprint sprint)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Cancel(Sprint sprint)
+    {
+        throw new NotImplementedException();
     }
 }

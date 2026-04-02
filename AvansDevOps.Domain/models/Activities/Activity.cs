@@ -8,4 +8,14 @@ public class Activity
     public required string Title { get; set; }
     public IUser? AssignedUser { get; set; }
     public IActivityState State { get; set; } = new ActivityTodoState();
+
+    public void SetState(IActivityState state)
+    {
+        State = state;
+    }
+
+    public IActivityState GetState()
+    {
+        return State;
+    }
 }

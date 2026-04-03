@@ -1,13 +1,16 @@
 using AvansDevOps.Domain.Models.Users;
 using AvansDevOps.Domain.Models.Activities.States;
+using AvansDevOps.Domain.Models.Notifications;
 
 namespace AvansDevOps.Domain.Models.Activities;
 
-public class Activity
+public class Activity : IObservable
 {
     public required string Title { get; set; }
     public IUser? AssignedUser { get; set; }
     public IActivityState State { get; set; } = new ActivityTodoState();
+    
+    private readonly List<IObserver> observers = [];
 
     public void SetState(IActivityState state)
     {
@@ -34,5 +37,26 @@ public class Activity
     {
         string assignee = AssignedUser?.Name ?? "Unassigned";
         Console.WriteLine($"      [{GetCurrentStateName()}] {Title} | Assigned: {assignee}");
+    }
+
+    public void NotifyObservers(string message)
+    {
+        foreach (var observer in observers)
+        {
+            observer.Update(message);
+        }
+    }
+
+    public void Subscribe(IObserver observer)
+    {
+        if (!observers.Contains(observer))
+        {
+            observers.Add(observer);
+        }
+    }
+
+    public void Unsubscribe(IObserver observer)
+    {
+        observers.Remove(observer);
     }
 }

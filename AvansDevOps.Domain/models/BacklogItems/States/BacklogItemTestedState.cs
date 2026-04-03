@@ -25,6 +25,8 @@ public class BacklogItemTestedState : IBacklogItemState
         {
             Console.WriteLine($"  ✓ BacklogItem '{item.Title}' fully approved. Moving to Done state.");
             item.SetState(new BacklogItemDoneState());
+            // Notify team members that item is complete and discussion is locked
+            item.NotifyObservers($"🔔 NOTIFICATION: Backlog Item Completed\nItem: '{item.Title}'\nThis item has been completed and is moved to Done. Associated discussions are now locked.");
         }
         else
         {

@@ -1,18 +1,21 @@
+using AvansDevOps.Domain.Models.Notifications.Channels;
+
 namespace AvansDevOps.Domain.Models.Notifications;
 
 public class NotificationObserver : IObserver
 {
-    private readonly INotificationAdapter adapter;
-    private readonly string name;
+    private readonly List<INotificationChannel> _channels;
 
-    public NotificationObserver(INotificationAdapter adapter, string name)
+    public NotificationObserver(List<INotificationChannel> channels)
     {
-        this.adapter = adapter;
-        this.name = name;
+        _channels = channels;
     }
 
     public void Update(string message)
     {
-        adapter.SendNotification(message, name);
+        foreach (var channel in _channels)
+        {
+            channel.Send(message);
+        }
     }
 }

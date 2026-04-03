@@ -7,39 +7,25 @@ public class ReleaseSprintStrategy : ISprintStrategy
 {
     public void Execute(Sprint sprint)
     {
-        Console.WriteLine($"Executing release for sprint '{sprint.Name}'.");
-
-        // Build release report
-        var report = new ReportBuilder()
-            .AddHeader($"Release Report for {sprint.Name}")
-            .AddFooter("Generated on " + DateTime.Now.ToString("yyyy-MM-dd"))
-            .AddTeamComposition($"Scrum Master: {sprint.ScrumMaster.Name}\nDevelopers: {string.Join(", ", sprint.Developers.Select(d => d.Name))}")
-            .AddBurndownChart("Burndown chart: [Simulated chart data]")
-            .AddEffortPerDeveloper("Effort per developer: [Simulated effort data]")
-            .SetFormat("PDF")
-            .AddSummary("Release completed successfully.")
-            .Build();
-
-        sprint.SetReport(report);
-
-        // Display report
-        Console.WriteLine("Release Report:");
-        Console.WriteLine($"Header: {report.Header}");
-        Console.WriteLine($"Summary: {report.Summary}");
+        Console.WriteLine($"Sprint '{sprint.Name}' finished as Release Sprint.");
+        Console.WriteLine("Validating release readiness...");
 
         // Check if all backlog items are done
         var allDone = sprint.BacklogItems.All(b => b.GetState().GetType().Name == "BacklogItemDoneState");
+        var completedItems = sprint.BacklogItems.Count(b => b.GetState().GetType().Name == "BacklogItemDoneState");
+        var totalItems = sprint.BacklogItems.Count;
+
+        Console.WriteLine($"Completed Backlog Items: {completedItems}/{totalItems}");
 
         if (allDone)
         {
-            Console.WriteLine("All backlog items are completed. Starting release process.");
-            // Since sprint is finished, call StartRelease
-            sprint.GetState().StartRelease(sprint);
+            Console.WriteLine("✓ All backlog items are completed. Ready for release.");
+            Console.WriteLine("The Scrum Master can initiate the release pipeline when ready.");
         }
         else
         {
-            Console.WriteLine("Not all backlog items are completed. Cannot release. Sprint remains finished.");
-            // Optionally, could set to a failed state, but for now, just log
+            Console.WriteLine("✗ Not all backlog items are completed. Release is blocked.");
+            Console.WriteLine("Please complete all items before initiating release.");
         }
     }
 }

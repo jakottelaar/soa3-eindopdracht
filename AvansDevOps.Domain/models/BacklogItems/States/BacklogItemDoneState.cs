@@ -19,7 +19,7 @@ public class BacklogItemDoneState : IBacklogItemState
 
     public void Approve(BacklogItem item)
     {
-        Console.WriteLine($"BacklogItem '{item.Title}' is already done.");
+        throw new InvalidOperationException("BacklogItem is already done.");
     }
 
     public void Reject(BacklogItem item)

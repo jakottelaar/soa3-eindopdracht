@@ -84,7 +84,7 @@ public class BacklogItemStateTests
         };
         item.State = new BacklogItemTestedState();
 
-        Assert.Throws<InvalidOperationException>(() => item.Approve());
+        Assert.Throws<InvalidOperationException>(item.Approve);
     }
 
     [Fact]
@@ -125,7 +125,7 @@ public class BacklogItemStateTests
     {
         var item = CreateBacklogItem();
 
-        Assert.Throws<InvalidOperationException>(() => item.Reject());
+        Assert.Throws<InvalidOperationException>(item.Reject);
     }
 
     [Fact]
@@ -134,7 +134,7 @@ public class BacklogItemStateTests
         var item = CreateBacklogItem();
         item.State = new BacklogItemDoneState();
 
-        Assert.Throws<InvalidOperationException>(() => item.Approve());
+        Assert.Throws<InvalidOperationException>(item.Approve);
     }
 
     [Fact]
@@ -143,6 +143,6 @@ public class BacklogItemStateTests
         var item = CreateBacklogItem();
         item.State = new BacklogItemDoneState();
 
-        Assert.Throws<InvalidOperationException>(() => item.Reject());
+        Assert.Throws<InvalidOperationException>(item.Reject);
     }
 }

@@ -53,11 +53,10 @@ internal static class TestFactory
 
     internal static Developer CreateDeveloper(string name)
     {
-        return new Developer
-        {
-            Name = name,
-            Email = $"{name}@example.com"
-        };
+        return new Developer(
+            name: name,
+            email: $"{name}@example.com"
+        );
     }
 }
 

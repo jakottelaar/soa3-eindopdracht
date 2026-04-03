@@ -1,6 +1,3 @@
-using AvansDevOps.Domain.Models.Sprints.Reports;
-using System.Linq;
-
 namespace AvansDevOps.Domain.Models.Sprints;
 
 public class ReviewSprintStrategy : ISprintStrategy

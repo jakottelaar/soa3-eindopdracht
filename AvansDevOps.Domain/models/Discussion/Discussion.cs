@@ -52,7 +52,7 @@ public class Discussion
     {
         foreach (var observer in observers)
         {
-            observer.Update(message);
+            observer.Update(message); 
         }
     }
 

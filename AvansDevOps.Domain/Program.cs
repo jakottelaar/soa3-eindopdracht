@@ -33,29 +33,25 @@ public class Program
             email: "john.doe@company.com"
         );
 
-        var developer1 = new Developer
-        {
-            Name = "Alice Smith",
-            Email = "alice.smith@company.com"
-        };
+        var developer1 = new Developer(
+            name: "Alice Smith",
+            email: "alice.smith@company.com"
+        );
 
-        var developer2 = new Developer
-        {
-            Name = "Bob Johnson",
-            Email = "bob.johnson@company.com"
-        };
+        var developer2 = new Developer (
+            name: "Bob Johnson",
+            email: "bob.johnson@company.com"
+        );
 
-        var tester = new Tester
-        {
-            Name = "Carol Williams",
-            Email = "carol.williams@company.com"
-        };
+        var tester = new Tester(
+            name: "Carol Williams",
+            email: "carol.williams@company.com"
+        );
 
-        var productOwner = new ProductOwner
-        {
-            Name = "Emma Brown",
-            Email = "emma.brown@company.com"
-        };
+        var productOwner = new ProductOwner(
+            name: "Emma Brown",
+            email: "emma.brown@company.com"
+        );
 
         // ========== DEMO 1: REVIEW SPRINT WITH NOTIFICATIONS ==========
         Console.WriteLine("=== DEMO 1: REVIEW SPRINT WITH NOTIFICATIONS ===\n");

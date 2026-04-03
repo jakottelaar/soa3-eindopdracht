@@ -101,10 +101,6 @@ public class Sprint : IObservable
         Report = report;
     }
 
-    /// <summary>
-    /// Allows the Scrum Master to add a custom report to the sprint after it has finished.
-    /// Can be used for both review sprints and release sprints. Reports are optional.
-    /// </summary>
     public void AddReport(Report report)
     {
         if (GetCurrentStateName() != "SprintFinishedState" && GetCurrentStateName() != "SprintReleasedState")
@@ -115,10 +111,6 @@ public class Sprint : IObservable
         Console.WriteLine($"Report added to sprint '{Name}' by Scrum Master.");
     }
 
-    /// <summary>
-    /// Allows the Scrum Master to add a summary to a review sprint after it has finished.
-    /// This method should be called on a finished review sprint.
-    /// </summary>
     public void AddReviewSummary(string summary)
     {
         if (!(SprintStrategy is ReviewSprintStrategy))

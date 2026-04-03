@@ -2,25 +2,25 @@ namespace AvansDevOps.Domain.Models.SCM;
 
     public class GitAdapter : ISourceControl
     {
-        private readonly GitLibrary _gitLibrary;
+        private readonly GitLibrary gitLibrary;
 
         public GitAdapter(GitLibrary gitLibrary)
         {
-            _gitLibrary = gitLibrary;
+            this.gitLibrary = gitLibrary;
         }
 
-        public void Commit(string message)
+        public void Commit(string message, string repo, string branch, string author)
         {
-            _gitLibrary.GitCommit(message);
+            gitLibrary.GitCommit(message, repo, branch, author);
         }
 
-        public void CreateBranch(string branchName)
+        public void CreateBranch(string branchName, string repo)
         {
-            _gitLibrary.GitCreateBranch(branchName);
+            gitLibrary.GitCreateBranch(branchName, repo);
         }
 
-        public void Checkout(string branchName)
+        public void Checkout(string repo)
         {
-            _gitLibrary.GitCheckout(branchName);
+            gitLibrary.GitCheckout(repo);
         }
     }

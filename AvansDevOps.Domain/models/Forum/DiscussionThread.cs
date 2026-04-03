@@ -4,7 +4,7 @@ namespace AvansDevOps.Domain.Models.Forum;
     {
         public string Title { get; set; }
 
-        private readonly List<IForumComponent> _messages = new();
+        private readonly List<IForumComponent> messages = [];
 
         public DiscussionThread(string title)
         {
@@ -13,19 +13,19 @@ namespace AvansDevOps.Domain.Models.Forum;
 
         public void Add(IForumComponent component)
         {
-            _messages.Add(component);
+            messages.Add(component);
         }
 
         public void Remove(IForumComponent component)
         {
-            _messages.Remove(component);
+            messages.Remove(component);
         }
 
         public void Accept(IForumVisitor visitor)
         {
             visitor.VisitThread(this);
 
-            foreach (var message in _messages)
+            foreach (var message in messages)
             {
                 message.Accept(visitor);
             }

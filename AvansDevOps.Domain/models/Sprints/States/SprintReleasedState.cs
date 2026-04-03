@@ -17,6 +17,7 @@ public class SprintReleasedState : ISprintState
         throw new InvalidOperationException("Sprint is already in released state.");
     }
 
+    // volgens mij klopt dit niet want als een sprint gereleased is hoeft hij niet terug naar finished state
     public void ReleaseSucceeded(Sprint sprint)
     {
         Console.WriteLine($"Sprint '{sprint.Name}' release succeeded! Transitioning to Finished state.");

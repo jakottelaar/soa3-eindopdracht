@@ -44,6 +44,12 @@ namespace AvansDevOps.Domain.Models.Sprints.Reports;
             return this;
         }
 
+        public ReportBuilder AddSummary(string summary)
+        {
+            report.SetSummary(summary);
+            return this;
+        }
+
         public Report Build()
         {
             return report;

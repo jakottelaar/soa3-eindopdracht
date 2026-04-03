@@ -9,7 +9,16 @@ public class SprintActiveState : ISprintState
 
     public void Finish(Sprint sprint)
     {
-        Console.WriteLine($"Sprint '{sprint.Name}' finished. Transitioning to Finished state.");
+        if (sprint.SprintStrategy is ReviewSprintStrategy)
+        {
+            if (sprint.Report == null || string.IsNullOrEmpty(sprint.Report.Summary))
+            {
+                throw new InvalidOperationException("Cannot finish review sprint without a report and summary added by the Scrum Master.");
+            }
+        }
+
+        Console.WriteLine($"Sprint '{sprint.Name}' finished. Executing sprint strategy.");
+        sprint.SprintStrategy.Execute(sprint);
         sprint.SetState(new SprintFinishedState());
     }
 

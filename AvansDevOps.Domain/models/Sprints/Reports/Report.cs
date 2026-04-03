@@ -9,6 +9,7 @@ namespace AvansDevOps.Domain.Models.Sprints.Reports;
         public string EffortPerDeveloper { get; private set; }
 
         public string Format { get; private set; }
+        public string Summary { get; private set; }
 
         internal void SetHeader(string header)
         {
@@ -38,5 +39,10 @@ namespace AvansDevOps.Domain.Models.Sprints.Reports;
         internal void SetFormat(string format)
         {
             Format = format;
+        }
+
+        internal void SetSummary(string summary)
+        {
+            Summary = summary;
         }
     }

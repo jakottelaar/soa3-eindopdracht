@@ -42,7 +42,12 @@ jobs:
                   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
               shell: powershell
               run: |
-                  ${{ runner.temp }}\scanner\dotnet-sonarscanner begin /k:"jakottelaar_soa3-eindopdracht" /o:"jakottelaar" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="${{ github.workspace }}\coverage.opencover.xml" /d:sonar.coverage.exclusions="**Tests.cs"
+                  ${{ runner.temp }}\scanner\dotnet-sonarscanner begin /k:"jakottelaar_soa3-eindopdracht" /o:"jakottelaar" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="${{ github.workspace }}\TestResults\**\coverage.opencover.xml" /d:sonar.coverage.exclusions="**Tests.cs"
                   dotnet build --configuration Release
-                  dotnet test --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput="${{ github.workspace }}\coverage.opencover.xml"
+                  dotnet test --configuration Release --collect:"XPlat Code Coverage" --results-directory "${{ github.workspace }}\TestResults" -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
+                  $coverageFiles = Get-ChildItem -Path "${{ github.workspace }}\TestResults" -Recurse -Filter "coverage.opencover.xml"
+                  if (-not $coverageFiles) {
+                      throw "No OpenCover report generated under TestResults."
+                  }
+                  $coverageFiles | ForEach-Object { Write-Host "Coverage report: $($_.FullName)" }
                   ${{ runner.temp }}\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"

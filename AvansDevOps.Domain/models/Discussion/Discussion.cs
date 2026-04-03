@@ -10,33 +10,32 @@ namespace AvansDevOps.Domain.Models.Discussion;
 
 public class Discussion
 {
-    private readonly DiscussionThread _root;
-    private readonly BacklogItem _backlogItem;
+    private readonly DiscussionThread root;
+    private readonly BacklogItem backlogItem;
 
-    public DiscussionThread Root => _root;
+    public DiscussionThread Root => root;
 
     public Discussion(BacklogItem backlogItem, IUser rootAuthor)
     {
-        _backlogItem = backlogItem;
-        _root = new DiscussionThread($"Root thread: {backlogItem.Title}", rootAuthor);
+        this.backlogItem = backlogItem;
+        this.root = new DiscussionThread($"Root thread: {backlogItem.Title}", rootAuthor);
     }
 
     public void AddThread(DiscussionThread thread)
     {
         CheckNotLocked();
-        _root.Add(thread);
+        root.Add(thread);
     }
 
     public void AddPost(DiscussionPost post)
     {
         CheckNotLocked();
-        _root.Add(post);
+        root.Add(post);
     }
 
-    public void Accept(IDiscussionVisitor visitor) => _root.Accept(visitor);
+    public void Accept(IDiscussionVisitor visitor) => root.Accept(visitor);
 
-    // Locked wanneer backlog item 'done' is (casus requirement)
-    public bool IsLocked() => _backlogItem.State is BacklogItemDoneState;
+    public bool IsLocked() => backlogItem.State is BacklogItemDoneState;
 
     private void CheckNotLocked()
     {

@@ -1,15 +1,13 @@
 using AvansDevOps.Domain.Models.Discussion.Composite;
 
-using AvansDevOps.Domain.Models.Discussion;
-
 namespace AvansDevOps.Domain.Models.Discussion.Visitor;
 
 public class MessageCountVisitor : IDiscussionVisitor
 {
-    private int _count;
+    private int count;
 
-    public void VisitPost(DiscussionPost post) => _count++;
-    public void VisitThread(DiscussionThread thread) => _count++;
+    public void VisitPost(DiscussionPost post) => count++;
+    public void VisitThread(DiscussionThread thread) => count++;
 
-    public int GetCount() => _count;
+    public int GetCount() => count;
 }

@@ -6,5 +6,5 @@ public interface IDiscussionComponent
 {
     string Message { get; }
     IUser Author { get; }
-    void Accept(IDiscussionVisitor visitor); // Visitor pattern hook
+    void Accept(IDiscussionVisitor visitor);
 }

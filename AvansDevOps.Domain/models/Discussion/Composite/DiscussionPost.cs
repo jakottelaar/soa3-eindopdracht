@@ -1,16 +1,14 @@
 using AvansDevOps.Domain.Models.Users;
 
-using AvansDevOps.Domain.Models.Discussion;
-
 namespace AvansDevOps.Domain.Models.Discussion.Composite;
 
 public class DiscussionPost : IDiscussionComponent
 {
     public string Message { get; }
     public IUser Author { get; }
-    private readonly List<DiscussionPost> _replies = new();
+    private readonly List<DiscussionPost> replies = [];
 
-    public IReadOnlyList<DiscussionPost> Replies => _replies.AsReadOnly();
+    public IReadOnlyList<DiscussionPost> Replies => replies.AsReadOnly();
 
     public DiscussionPost(string message, IUser author)
     {
@@ -20,13 +18,13 @@ public class DiscussionPost : IDiscussionComponent
 
     public void AddReply(DiscussionPost reply)
     {
-        _replies.Add(reply);
+        replies.Add(reply);
     }
 
     public void Accept(IDiscussionVisitor visitor)
     {
         visitor.VisitPost(this); // Visitor pattern
-        foreach (var reply in _replies)
+        foreach (var reply in replies)
         {
             reply.Accept(visitor); // Recursively visit replies
         }

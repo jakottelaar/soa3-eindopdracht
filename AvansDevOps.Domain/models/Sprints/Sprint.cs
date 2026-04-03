@@ -1,6 +1,7 @@
 using AvansDevOps.Domain.Models.Users;
 using AvansDevOps.Domain.Models.BacklogItems;
 using AvansDevOps.Domain.Models.Sprints.States;
+using AvansDevOps.Domain.Models.Sprints.Reports;
 
 namespace AvansDevOps.Domain.Models.Sprints;
 
@@ -14,6 +15,8 @@ public class Sprint
 
     public List<BacklogItem> BacklogItems { get; set; } = new();
     public IUser ScrumMaster { get; set; }
+    public List<IUser> Developers { get; set; } = new();
+    public Report? Report { get; set; }
 
     public Sprint(ISprintStrategy sprintStrategy, IUser scrumMaster)
     {
@@ -29,5 +32,29 @@ public class Sprint
     public ISprintState GetState()
     {
         return State;
+    }
+
+    public string GetCurrentStateName()
+    {
+        return State.GetType().Name;
+    }
+
+    public void DisplayStatus()
+    {
+        Console.WriteLine($"[Sprint: {Name} | State: {GetCurrentStateName()} | Start: {StartDate:yyyy-MM-dd} | End: {EndDate:yyyy-MM-dd}]");
+    }
+
+    public void SetReport(Report report)
+    {
+        Report = report;
+    }
+
+    public void AddReviewSummary(string summary)
+    {
+        if (Report == null)
+        {
+            throw new InvalidOperationException("No report set for the sprint.");
+        }
+        Report.SetSummary(summary);
     }
 }

@@ -4,31 +4,33 @@ namespace AvansDevOps.Domain.Models.BacklogItems.States;
 
 public class BacklogItemTestedState : IBacklogItemState
 {
-
     public void Start(BacklogItem item)
     {
-        throw new InvalidOperationException();
+        throw new InvalidOperationException("Item is already tested and complete.");
     }
 
     public void MarkReadyForTesting(BacklogItem item)
     {
-        throw new InvalidOperationException();
+        throw new InvalidOperationException("Item is already tested.");
     }
 
     public void StartTesting(BacklogItem item)
     {
-        throw new InvalidOperationException();
+        throw new InvalidOperationException("Item is already tested.");
     }
 
-     public void Approve(BacklogItem item)
+    public void Approve(BacklogItem item)
     {
-        if (item.Activities == null || item.Activities.All(a => a.GetState() is ActivityDoneState))
+        if (item.AreAllActivitiesDone())
         {
+            Console.WriteLine($"  ✓ BacklogItem '{item.Title}' fully approved. Moving to Done state.");
             item.SetState(new BacklogItemDoneState());
         }
         else
         {
-            throw new InvalidOperationException("Activities not finished");
+            Console.WriteLine($"  ✗ Cannot approve '{item.Title}' - not all activities are completed.");
+            Console.WriteLine("    Please complete all activities before approving the backlog item.");
+            throw new InvalidOperationException($"Cannot approve backlog item '{item.Title}' - activities not finished");
         }
     }
 

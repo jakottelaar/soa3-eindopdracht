@@ -4,11 +4,11 @@ public class ActivityDoneState : IActivityState
 {
     public void Start(Activity activity)
     {
-        throw new InvalidOperationException();
+        throw new InvalidOperationException("Cannot start an activity that is already done.");
     }
 
     public void Complete(Activity activity)
     {
-        throw new InvalidOperationException();
+        Console.WriteLine($"Activity '{activity.Title}' is already completed.");
     }
 }

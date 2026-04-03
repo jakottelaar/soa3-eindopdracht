@@ -4,6 +4,6 @@ public class SlackChannel : INotificationChannel
 {
     public void Send(string message)
     {
-        Console.WriteLine($"💬 [SLACK NOTIFICATION]\n{message}\n");
+        Console.WriteLine($"[SLACK NOTIFICATION]\n{message}\n");
     }
 }

@@ -4,16 +4,16 @@ namespace AvansDevOps.Domain.Models.Notifications;
 
 public class NotificationObserver : IObserver
 {
-    private readonly List<INotificationChannel> _channels;
+    private readonly List<INotificationChannel> channels;
 
     public NotificationObserver(List<INotificationChannel> channels)
     {
-        _channels = channels;
+        this.channels = channels;
     }
 
     public void Update(string message)
     {
-        foreach (var channel in _channels)
+        foreach (var channel in channels)
         {
             channel.Send(message);
         }

@@ -4,6 +4,6 @@ public class EmailChannel : INotificationChannel
 {
     public void Send(string message)
     {
-        Console.WriteLine($"📧 [EMAIL NOTIFICATION]\n{message}\n");
+        Console.WriteLine($"[EMAIL NOTIFICATION]\n{message}\n");
     }
 }

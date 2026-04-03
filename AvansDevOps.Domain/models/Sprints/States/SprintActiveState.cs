@@ -9,11 +9,18 @@ public class SprintActiveState : ISprintState
 
     public void Finish(Sprint sprint)
     {
+        if (sprint.SprintStrategy is ReviewSprintStrategy)
+        {
+            if (sprint.Report == null || string.IsNullOrWhiteSpace(sprint.Report.Summary))
+            {
+                throw new InvalidOperationException("Cannot finish review sprint without a review document and summary.");
+            }
+        }
+
         Console.WriteLine($"Sprint '{sprint.Name}' finished. Preparing for post-sprint activities.");
         sprint.SetState(new SprintFinishedState());
 
-        // Execute strategy after setting state to finished
-        // This allows for proper handling of review summaries or release pipelines
+        // Execute strategy after state transition so strategy can run post-finish actions.
         sprint.SprintStrategy.Execute(sprint);
     }
 

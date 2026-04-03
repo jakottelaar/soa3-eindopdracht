@@ -32,7 +32,7 @@ public class Discussion
         root.Add(post);
         
         // Notify team members that a new post was added
-        NotifyObservers($"💬 NOTIFICATION: New Reply in Discussion\nBacklog Item: '{backlogItem.Title}'\nAuthor: {post.Author.Name}\nMessage: {post.Message}");
+        NotifyObservers($"NOTIFICATION: New Reply in Discussion\nBacklog Item: '{backlogItem.Title}'\nAuthor: {post.Author.Name}\nMessage: {post.Message}");
     }
 
     public void Subscribe(IObserver observer)

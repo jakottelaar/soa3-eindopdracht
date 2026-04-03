@@ -1,5 +1,4 @@
 using System.Linq;
-using AvansDevOps.Domain.Models.Sprints.Reports;
 
 namespace AvansDevOps.Domain.Models.Sprints;
 
@@ -20,7 +19,25 @@ public class ReleaseSprintStrategy : ISprintStrategy
         if (allDone)
         {
             Console.WriteLine("✓ All backlog items are completed. Ready for release.");
-            Console.WriteLine("The Scrum Master can initiate the release pipeline when ready.");
+
+            if (sprint.ReleasePipeline == null)
+            {
+                throw new InvalidOperationException("Release sprint has no linked pipeline.");
+            }
+
+            Console.WriteLine("Starting linked release pipeline automatically...");
+
+            var pipelineSucceeded = sprint.ReleasePipeline.Execute();
+            sprint.GetState().StartRelease(sprint);
+
+            if (pipelineSucceeded)
+            {
+                sprint.GetState().ReleaseSucceeded(sprint);
+            }
+            else
+            {
+                sprint.GetState().ReleaseFailed(sprint);
+            }
         }
         else
         {

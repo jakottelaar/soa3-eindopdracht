@@ -12,7 +12,11 @@ public class BacklogItemDoingState : IBacklogItemState
         Console.WriteLine($"  ✓ BacklogItem '{item.Title}' marked ready for testing. Moving to ReadyForTesting state.");
         item.SetState(new BacklogItemReadyForTestingState());
         // Notify testers that item is ready for testing
-        item.NotifyObservers($"🔔 NOTIFICATION: Backlog Item Ready for Testing\nItem: '{item.Title}'\nDescription: {item.Description}\nPlease review and begin testing.");
+        item.NotifyObservers(
+            $"NOTIFICATION: Backlog Item Ready for Testing\n" +
+            $"Item: '{item.Title}'\n" +
+            $"Description: {item.Description ?? "N/A"}\n" +
+            "Please review and begin testing.");
     }
 
     public void StartTesting(BacklogItem item)

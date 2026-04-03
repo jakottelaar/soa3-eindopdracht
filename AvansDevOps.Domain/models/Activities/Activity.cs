@@ -8,7 +8,17 @@ public class Activity : IObservable
 {
     public required string Title { get; set; }
     public IUser? AssignedUser { get; set; }
-    public IActivityState State { get; set; } = new ActivityTodoState();
+    private IActivityState state = new ActivityTodoState();
+
+    public IActivityState State
+    {
+        get => state;
+        set
+        {
+            state = value;
+            NotifyObservers($"Activity state changed: {GetCurrentStateName()}");
+        }
+    }
     
     private readonly List<IObserver> observers = [];
 

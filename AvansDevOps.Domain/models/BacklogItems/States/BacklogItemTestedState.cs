@@ -1,5 +1,3 @@
-using AvansDevOps.Domain.Models.Activities.States;
-
 namespace AvansDevOps.Domain.Models.BacklogItems.States;
 
 public class BacklogItemTestedState : IBacklogItemState
@@ -26,7 +24,10 @@ public class BacklogItemTestedState : IBacklogItemState
             Console.WriteLine($"  ✓ BacklogItem '{item.Title}' fully approved. Moving to Done state.");
             item.SetState(new BacklogItemDoneState());
             // Notify team members that item is complete and discussion is locked
-            item.NotifyObservers($"🔔 NOTIFICATION: Backlog Item Completed\nItem: '{item.Title}'\nThis item has been completed and is moved to Done. Associated discussions are now locked.");
+            item.NotifyObservers(
+                $"NOTIFICATION: Backlog Item Completed\n" +
+                $"Item: '{item.Title}'\n" +
+                "This item has been completed and is moved to Done. Associated discussions are now locked.");
         }
         else
         {

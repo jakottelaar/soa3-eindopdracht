@@ -1,4 +1,4 @@
-namespace  AvansDevOps.Domain.Models.Sprints.States;
+namespace AvansDevOps.Domain.Models.Sprints.States;
 
 public class SprintReleasedState : ISprintState
 {
@@ -23,7 +23,7 @@ public class SprintReleasedState : ISprintState
         Console.WriteLine("Notifying Scrum Master and Product Owner of successful release...");
         
         // Notify Scrum Master and Product Owner
-        var notificationMessage = $"✅ NOTIFICATION: Release Successful\n" +
+        var notificationMessage = $"NOTIFICATION: Release Successful\n" +
                                  $"Sprint: '{sprint.Name}'\n" +
                                  $"Status: Release deployment to production completed successfully.\n" +
                                  $"Time: {DateTime.Now:yyyy-MM-dd HH:mm:ss}\n" +
@@ -39,7 +39,7 @@ public class SprintReleasedState : ISprintState
         Console.WriteLine("Notifying Scrum Master and Product Owner of failed release...");
         
         // Notify Scrum Master and Product Owner
-        var notificationMessage = $"❌ NOTIFICATION: Release Failed\n" +
+        var notificationMessage = $"NOTIFICATION: Release Failed\n" +
                                  $"Sprint: '{sprint.Name}'\n" +
                                  $"Status: Release deployment encountered errors and was rolled back.\n" +
                                  $"Time: {DateTime.Now:yyyy-MM-dd HH:mm:ss}\n" +
@@ -53,6 +53,7 @@ public class SprintReleasedState : ISprintState
     public void Cancel(Sprint sprint)
     {
         Console.WriteLine($"Sprint '{sprint.Name}' cancelled during release. Transitioning to Cancelled state.");
+        sprint.NotifyObservers($"NOTIFICATION: Release Cancelled\nSprint: '{sprint.Name}'\nThe release was cancelled by the Scrum Master.");
         sprint.SetState(new SprintCancelledState());
     }
 }

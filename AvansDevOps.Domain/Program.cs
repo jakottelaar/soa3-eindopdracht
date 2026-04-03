@@ -5,6 +5,8 @@ using AvansDevOps.Domain.Models.Activities;
 using AvansDevOps.Domain.Models.Discussion;
 using AvansDevOps.Domain.Models.Discussion.Composite;
 using AvansDevOps.Domain.Models.Discussion.Visitor;
+using AvansDevOps.Domain.Models.Pipeline;
+using AvansDevOps.Domain.Models.Pipeline.Steps;
 using AvansDevOps.Domain.Models.Sprints.Reports;
 using AvansDevOps.Domain.Models.Notifications;
 using AvansDevOps.Domain.Models.Notifications.Channels;
@@ -72,12 +74,6 @@ public class Program
         Console.WriteLine("=== SPRINT CREATION ===");
         Console.WriteLine($"Sprint Type: Review Sprint");
         Console.WriteLine($"Sprint: {reviewSprint.Name}");
-        reviewSprint.DisplayStatus();
-        Console.WriteLine();
-
-        // Start sprint
-        Console.WriteLine("=== STARTING SPRINT ===");
-        reviewSprint.GetState().Start(reviewSprint);
         reviewSprint.DisplayStatus();
         Console.WriteLine();
 
@@ -150,6 +146,12 @@ public class Program
         reviewSprint.BacklogItems.Add(backlogItem3);
         Console.WriteLine("Added all backlog items to sprint\n");
 
+        // Start sprint after planning is complete
+        Console.WriteLine("=== STARTING SPRINT ===");
+        reviewSprint.GetState().Start(reviewSprint);
+        reviewSprint.DisplayStatus();
+        Console.WriteLine();
+
         // Work through backlog items
         Console.WriteLine("=== COMPLETING BACKLOG ITEMS & OBSERVING NOTIFICATIONS ===");
         backlogItem1.Start();
@@ -180,6 +182,12 @@ public class Program
         Console.WriteLine("=== REVIEW SPRINT COMPLETION ===");
         Console.WriteLine($"Total items: {reviewSprint.BacklogItems.Count}");
         Console.WriteLine("All items are Done. Finishing sprint...");
+
+        reviewSprint.SetReport(new ReportBuilder()
+            .AddHeader($"Review Report for {reviewSprint.Name}")
+            .AddSummary("Initial review summary before closing sprint.")
+            .Build());
+
         reviewSprint.GetState().Finish(reviewSprint);
         reviewSprint.DisplayStatus();
         Console.WriteLine();
@@ -193,7 +201,15 @@ public class Program
         Console.WriteLine("\n=== DEMO 2: RELEASE SPRINT ===\n");
 
         // Create a release sprint
-        var releaseSprint = new Sprint(new ReleaseSprintStrategy(), scrumMaster)
+        var releasePipeline = new Pipeline("Release Pipeline");
+        releasePipeline.AddStep(new SourceAction());
+        releasePipeline.AddStep(new BuildAction());
+        releasePipeline.AddStep(new TestAction());
+        releasePipeline.AddStep(new AnalyzeAction());
+        releasePipeline.AddStep(new PackageAction());
+        releasePipeline.AddStep(new DeployAction());
+
+        var releaseSprint = new Sprint(new ReleaseSprintStrategy(), scrumMaster, releasePipeline)
         {
             Name = "Sprint 2 - Payment Processing Release",
             StartDate = DateTime.Now.AddDays(14),
@@ -209,12 +225,6 @@ public class Program
         Console.WriteLine("=== SPRINT CREATION ===");
         Console.WriteLine($"Sprint Type: Release Sprint");
         Console.WriteLine($"Sprint: {releaseSprint.Name}");
-        releaseSprint.DisplayStatus();
-        Console.WriteLine();
-
-        // Start sprint
-        Console.WriteLine("=== STARTING SPRINT ===");
-        releaseSprint.GetState().Start(releaseSprint);
         releaseSprint.DisplayStatus();
         Console.WriteLine();
 
@@ -243,6 +253,12 @@ public class Program
         releaseSprint.BacklogItems.Add(releaseItem1);
         releaseSprint.BacklogItems.Add(releaseItem2);
         Console.WriteLine("Added 2 backlog items to release sprint\n");
+
+        // Start sprint after planning is complete
+        Console.WriteLine("=== STARTING SPRINT ===");
+        releaseSprint.GetState().Start(releaseSprint);
+        releaseSprint.DisplayStatus();
+        Console.WriteLine();
 
         // Complete backlog items
         Console.WriteLine("=== COMPLETING BACKLOG ITEMS & OBSERVING NOTIFICATIONS ===");

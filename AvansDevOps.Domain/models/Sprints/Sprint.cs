@@ -1,30 +1,71 @@
+using System.Collections.ObjectModel;
 using AvansDevOps.Domain.Models.Users;
 using AvansDevOps.Domain.Models.BacklogItems;
 using AvansDevOps.Domain.Models.Sprints.States;
 using AvansDevOps.Domain.Models.Sprints.Reports;
 using AvansDevOps.Domain.Models.Notifications;
+using ReleasePipelineModel = AvansDevOps.Domain.Models.Pipeline.Pipeline;
 
 namespace AvansDevOps.Domain.Models.Sprints;
 
 public class Sprint : IObservable
 {
-    public string Name { get; set; } = string.Empty;
-    public  DateTime StartDate { get; set; }
-    public DateTime EndDate { get; set; }
+    private string name = string.Empty;
+    private DateTime startDate;
+    private DateTime endDate;
+
+    public string Name
+    {
+        get => name;
+        set
+        {
+            EnsureCreatedPhase(nameof(Name));
+            name = value;
+        }
+    }
+
+    public DateTime StartDate
+    {
+        get => startDate;
+        set
+        {
+            EnsureCreatedPhase(nameof(StartDate));
+            startDate = value;
+        }
+    }
+
+    public DateTime EndDate
+    {
+        get => endDate;
+        set
+        {
+            EnsureCreatedPhase(nameof(EndDate));
+            endDate = value;
+        }
+    }
+
     public ISprintState State { get; set; } = new SprintCreatedState();
     public ISprintStrategy SprintStrategy { get; set; }
+    public ReleasePipelineModel? ReleasePipeline { get; }
 
-    public List<BacklogItem> BacklogItems { get; set; } = new();
+    public IList<BacklogItem> BacklogItems { get; }
     public IUser ScrumMaster { get; set; }
     public List<IUser> Developers { get; set; } = new();
     public Report? Report { get; set; }
     
     private readonly List<IObserver> observers = [];
 
-    public Sprint(ISprintStrategy sprintStrategy, IUser scrumMaster)
+    public Sprint(ISprintStrategy sprintStrategy, IUser scrumMaster, ReleasePipelineModel? releasePipeline = null)
     {
         SprintStrategy = sprintStrategy;
         ScrumMaster = scrumMaster;
+        ReleasePipeline = releasePipeline;
+        BacklogItems = new SprintBacklogCollection(this);
+
+        if (SprintStrategy is ReleaseSprintStrategy && ReleasePipeline == null)
+        {
+            throw new InvalidOperationException("ReleaseSprint requires a linked pipeline.");
+        }
     }
     
     public void SetState(ISprintState state)
@@ -45,6 +86,14 @@ public class Sprint : IObservable
     public void DisplayStatus()
     {
         Console.WriteLine($"[Sprint: {Name} | State: {GetCurrentStateName()} | Start: {StartDate:yyyy-MM-dd} | End: {EndDate:yyyy-MM-dd}]");
+    }
+
+    public void UpdateStateByDate(DateTime currentDate)
+    {
+        if (State is SprintActiveState && currentDate.Date >= EndDate.Date)
+        {
+            State.Finish(this);
+        }
     }
 
     public void SetReport(Report report)
@@ -120,5 +169,48 @@ public class Sprint : IObservable
     public void Unsubscribe(IObserver observer)
     {
         observers.Remove(observer);
+    }
+
+    private void EnsureCreatedPhase(string propertyName)
+    {
+        if (State is not SprintCreatedState)
+        {
+            throw new InvalidOperationException($"{propertyName} can only be modified in Created phase.");
+        }
+    }
+
+    private void EnsureBacklogMutable()
+    {
+        if (State is not SprintCreatedState)
+        {
+            throw new InvalidOperationException("Backlog items can only be changed in Created phase.");
+        }
+    }
+
+    private sealed class SprintBacklogCollection(Sprint owner) : Collection<BacklogItem>
+    {
+        protected override void InsertItem(int index, BacklogItem item)
+        {
+            owner.EnsureBacklogMutable();
+            base.InsertItem(index, item);
+        }
+
+        protected override void SetItem(int index, BacklogItem item)
+        {
+            owner.EnsureBacklogMutable();
+            base.SetItem(index, item);
+        }
+
+        protected override void RemoveItem(int index)
+        {
+            owner.EnsureBacklogMutable();
+            base.RemoveItem(index);
+        }
+
+        protected override void ClearItems()
+        {
+            owner.EnsureBacklogMutable();
+            base.ClearItems();
+        }
     }
 }

@@ -2,6 +2,9 @@
 using AvansDevOps.Domain.Models.Users;
 using AvansDevOps.Domain.Models.BacklogItems;
 using AvansDevOps.Domain.Models.Activities;
+using AvansDevOps.Domain.Models.Discussion;
+using AvansDevOps.Domain.Models.Discussion.Composite;
+using AvansDevOps.Domain.Models.Discussion.Visitor;
 
 namespace AvansDevOps.Domain;
 
@@ -243,6 +246,71 @@ public class Program
         sprint.DisplayStatus();
         Console.WriteLine();
 
+        // Discussion Demo
+        Console.WriteLine("=== DISCUSSION FEATURE DEMO ===");
+        Console.WriteLine("Creating a discussion on the first backlog item...");
+
+        // Create discussion on backlog item 1
+        var discussion = new Discussion(backlogItem1, scrumMaster);
+
+        // Add initial post
+        var initialPost = new DiscussionPost("How should we handle validation errors on the login form?", developer1);
+        discussion.AddPost(initialPost);
+        Console.WriteLine($"Added initial post by {developer1.Name}: \"{initialPost.Message}\"");
+
+        // Add a reply to the initial post
+        var reply1 = new DiscussionPost("We should show inline validation messages and disable the submit button until valid.", developer2);
+        initialPost.AddReply(reply1);
+        Console.WriteLine($"Added reply by {developer2.Name}: \"{reply1.Message}\"");
+
+        // Add a reply to the reply
+        var reply2 = new DiscussionPost("Good idea! Also, let's add ARIA labels for accessibility.", tester);
+        reply1.AddReply(reply2);
+        Console.WriteLine($"Added nested reply by {tester.Name}: \"{reply2.Message}\"");
+
+        // Add another top-level post
+        var anotherPost = new DiscussionPost("What about mobile responsiveness for the login page?", developer1);
+        discussion.AddPost(anotherPost);
+        Console.WriteLine($"Added another post by {developer1.Name}: \"{anotherPost.Message}\"");
+
+        // Count total messages using visitor pattern
+        var messageCounter = new MessageCountVisitor();
+        discussion.Accept(messageCounter);
+        Console.WriteLine($"Total messages in discussion: {messageCounter.GetCount()}");
+
+        // Display discussion structure
+        Console.WriteLine("\nDiscussion structure:");
+        DisplayDiscussion(discussion.Root, 0);
+
+        Console.WriteLine();
+
         Console.WriteLine("=== DEMO COMPLETE ===");
+    }
+
+    private static void DisplayDiscussion(DiscussionThread thread, int depth)
+    {
+        var indent = new string(' ', depth * 2);
+        Console.WriteLine($"{indent}Thread: {thread.Message}");
+        foreach (var child in thread.Children)
+        {
+            if (child is DiscussionThread childThread)
+            {
+                DisplayDiscussion(childThread, depth + 1);
+            }
+            else if (child is DiscussionPost childPost)
+            {
+                DisplayPost(childPost, depth + 1);
+            }
+        }
+    }
+
+    private static void DisplayPost(DiscussionPost post, int depth)
+    {
+        var indent = new string(' ', depth * 2);
+        Console.WriteLine($"{indent}Post by {post.Author.Name}: {post.Message}");
+        foreach (var reply in post.Replies)
+        {
+            DisplayPost(reply, depth + 1);
+        }
     }
 }

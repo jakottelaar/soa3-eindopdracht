@@ -14,10 +14,10 @@ jobs:
               uses: actions/setup-java@v4
               with:
                   java-version: 17
-                  distribution: "zulu" # Alternative distribution options are available.
+                  distribution: "zulu"
             - uses: actions/checkout@v4
               with:
-                  fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+                  fetch-depth: 0
             - name: Cache SonarQube Cloud packages
               uses: actions/cache@v4
               with:
@@ -42,7 +42,7 @@ jobs:
                   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
               shell: powershell
               run: |
-                  ${{ runner.temp }}\scanner\dotnet-sonarscanner begin /k:"jakottelaar_soa3-eindopdracht" /o:"jakottelaar" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="**/coverage/coverage.opencover.xml" /d:sonar.coverage.exclusions="**Tests.cs"
-                  dotnet build
-                  dotnet test /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=./coverage/
+                  ${{ runner.temp }}\scanner\dotnet-sonarscanner begin /k:"jakottelaar_soa3-eindopdracht" /o:"jakottelaar" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" /d:sonar.coverage.exclusions="**Tests.cs"
+                  dotnet build --configuration Release
+                  dotnet test --configuration Release /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput="../coverage.opencover.xml"
                   ${{ runner.temp }}\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"

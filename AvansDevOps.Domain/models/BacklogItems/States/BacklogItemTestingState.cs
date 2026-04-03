@@ -27,5 +27,10 @@ public class BacklogItemTestingState : IBacklogItemState
     {
         Console.WriteLine($"  ✗ BacklogItem '{item.Title}' testing rejected. Moving back to Todo state.");
         item.SetState(new BacklogItemTodoState());
+        // Notify Scrum Master that item was rejected
+        item.NotifyObservers(
+            $"NOTIFICATION: Backlog Item Testing Rejected\n" +
+            $"Item: '{item.Title}'\n" +
+            "This item needs to be reworked. The tester found issues that need to be addressed.");
     }
 }

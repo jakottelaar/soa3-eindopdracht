@@ -11,15 +11,17 @@ public class SprintActiveState : ISprintState
     {
         if (sprint.SprintStrategy is ReviewSprintStrategy)
         {
-            if (sprint.Report == null || string.IsNullOrEmpty(sprint.Report.Summary))
+            if (sprint.Report == null || string.IsNullOrWhiteSpace(sprint.Report.Summary))
             {
-                throw new InvalidOperationException("Cannot finish review sprint without a report and summary added by the Scrum Master.");
+                throw new InvalidOperationException("Cannot finish review sprint without a review document and summary.");
             }
         }
 
-        Console.WriteLine($"Sprint '{sprint.Name}' finished. Executing sprint strategy.");
-        sprint.SprintStrategy.Execute(sprint);
+        Console.WriteLine($"Sprint '{sprint.Name}' finished. Preparing for post-sprint activities.");
         sprint.SetState(new SprintFinishedState());
+
+        // Execute strategy after state transition so strategy can run post-finish actions.
+        sprint.SprintStrategy.Execute(sprint);
     }
 
     public void StartRelease(Sprint sprint)

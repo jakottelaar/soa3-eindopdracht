@@ -14,18 +14,24 @@ public class SprintFinishedState : ISprintState
 
     public void StartRelease(Sprint sprint)
     {
-        Console.WriteLine($"Sprint '{sprint.Name}' starting release process. Transitioning to Released state.");
+        // Only release sprints can start a release process
+        if (!(sprint.SprintStrategy is ReleaseSprintStrategy))
+        {
+            throw new InvalidOperationException("Only release sprints can initiate a release process.");
+        }
+
+        Console.WriteLine($"Sprint '{sprint.Name}' starting release pipeline. Transitioning to Released state.");
         sprint.SetState(new SprintReleasedState());
     }
 
     public void ReleaseSucceeded(Sprint sprint)
     {
-        throw new InvalidOperationException("Sprint is already finished.");
+        throw new InvalidOperationException("Use StartRelease() to initiate the release process first.");
     }
 
     public void ReleaseFailed(Sprint sprint)
     {
-        throw new InvalidOperationException("Sprint is already finished.");
+        throw new InvalidOperationException("Use StartRelease() to initiate the release process first.");
     }
 
     public void Cancel(Sprint sprint)

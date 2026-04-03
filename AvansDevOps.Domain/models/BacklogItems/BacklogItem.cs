@@ -15,6 +15,7 @@ public class BacklogItem : IObservable
     public IUser? AssignedUser { get; set; }
     public IBacklogItemState State { get; set; } = new BacklogItemTodoState();
     private readonly List<IObserver> observers = [];
+    private readonly Dictionary<Activity, IObserver> activityObservers = [];
 
     public void Start() => 
         State.Start(this);
@@ -30,6 +31,17 @@ public class BacklogItem : IObservable
 
     public void Reject() => 
         State.Reject(this);
+
+    public void ResetToTodoAndNotifyScrumMaster()
+    {
+        if (State is not BacklogItemTestedState)
+        {
+            throw new InvalidOperationException("Item can only be reset to todo from Tested state.");
+        }
+
+        SetState(new BacklogItemTodoState());
+        NotifyObservers($"NOTIFICATION: Scrum Master Attention\nBacklog item '{Title}' was moved from Tested to Todo for rework.");
+    }
         
     public void SetState(IBacklogItemState state)
     {
@@ -88,11 +100,23 @@ public class BacklogItem : IObservable
     {
         Activities ??= new List<Activity>();
         Activities.Add(activity);
+
+        var observer = new ActivityStateObserver(this);
+        activity.Subscribe(observer);
+        activityObservers[activity] = observer;
+
+        HandleActivityStateChanged();
         Console.WriteLine($"  ✓ Added activity '{activity.Title}' to backlog item '{Title}'");
     }
 
     public void RemoveActivity(Activity activity)
     {
+        if (activityObservers.TryGetValue(activity, out var observer))
+        {
+            activity.Unsubscribe(observer);
+            activityObservers.Remove(activity);
+        }
+
         if (Activities != null && Activities.Remove(activity))
         {
             Console.WriteLine($"  ✓ Removed activity '{activity.Title}' from backlog item '{Title}'");
@@ -114,5 +138,23 @@ public class BacklogItem : IObservable
             return true; // No activities means all are "done"
 
         return Activities.All(a => a.GetState() is ActivityDoneState);
+    }
+
+    private void HandleActivityStateChanged()
+    {
+        if (State is BacklogItemDoneState && !AreAllActivitiesDone())
+        {
+            SetState(new BacklogItemTestedState());
+            NotifyObservers($"NOTIFICATION: Backlog Item Reopened\nBacklog item '{Title}' moved from Done to Tested because an activity regressed.");
+        }
+    }
+
+    private sealed class ActivityStateObserver(BacklogItem backlogItem) : IObserver
+    {
+        public void Update(string message)
+        {
+            _ = message;
+            backlogItem.HandleActivityStateChanged();
+        }
     }
 }
